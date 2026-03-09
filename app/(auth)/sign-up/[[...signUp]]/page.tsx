@@ -58,12 +58,12 @@ export default function SignUpPage() {
 
           <p className="text-center text-xs text-yellow-400">
             Already have an account?{" "}
-            <Clerk.Link
-              navigate="sign-in"
+            <Link
+              href="/sign-in"
               className="font-bold underline underline-offset-2 hover:text-yellow-200"
             >
               Sign in
-            </Clerk.Link>
+            </Link>
           </p>
         </SignUp.Step>
 
@@ -146,12 +146,12 @@ export default function SignUpPage() {
 
           <p className="text-center text-xs text-yellow-400">
             Already have an account?{" "}
-            <Clerk.Link
-              navigate="sign-in"
+            <Link
+              href="/sign-in"
               className="font-bold underline underline-offset-2 hover:text-yellow-200"
             >
               Sign in
-            </Clerk.Link>
+            </Link>
           </p>
         </SignUp.Step>
       </SignUp.Root>

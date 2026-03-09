@@ -70,12 +70,12 @@ export default function SignInPage() {
           {/* LINK TO SIGN UP */}
           <p className="text-center text-xs text-black">
             No account?{" "}
-            <Clerk.Link
-              navigate="sign-up"
+            <Link
+              href="/sign-up"
               className="font-bold underline underline-offset-2 hover:text-yellow-600"
             >
               Create an account
-            </Clerk.Link>
+            </Link>
           </p>
         </SignIn.Step>
       </SignIn.Root>
