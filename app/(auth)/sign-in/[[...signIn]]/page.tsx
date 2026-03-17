@@ -2,6 +2,8 @@
 
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function SignInPage() {
   return (
@@ -12,17 +14,8 @@ export default function SignInPage() {
           className="mx-auto w-full sm:w-96 space-y-6 bg-white px-4 py-8 border-4 border-black shadow-[8px_8px_0_0_#000]"
         >
           {/* HEADER */}
-          <header className="text-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 40 40"
-              className="mx-auto h-12 w-12 text-black"
-              aria-hidden="true"
-            >
-              <rect width="40" height="40" fill="#000" />
-              <rect x="8" y="8" width="24" height="24" fill="#fff" />
-            </svg>
+          <header className="text-center flex flex-col items-center ">
+            <Image src="/logo.png" alt="Logo" width={40} height={40} />
             <h1 className="mt-3 text-base font-bold tracking-wide text-black uppercase">
               Sign in to Clover
             </h1>
@@ -77,12 +70,12 @@ export default function SignInPage() {
           {/* LINK TO SIGN UP */}
           <p className="text-center text-xs text-black">
             No account?{" "}
-            <Clerk.Link
-              navigate="sign-up"
+            <Link
+              href="/sign-up"
               className="font-bold underline underline-offset-2 hover:text-yellow-600"
             >
               Create an account
-            </Clerk.Link>
+            </Link>
           </p>
         </SignIn.Step>
       </SignIn.Root>

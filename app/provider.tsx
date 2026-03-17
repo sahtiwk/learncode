@@ -1,11 +1,32 @@
-import React from 'react'
+// app/provider.tsx
+"use client";
 
-import { ThemeProvider as NextThemesProvider } from "next-themes"
-function Provider({
-    children,
-    ...props
-    }: React.ComponentProps<typeof NextThemesProvider>) {
-    return (<NextThemesProvider {...props}>{children}</NextThemesProvider>)
+import React, { useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import axios from "axios";
+
+type ProviderProps = React.ComponentProps<typeof NextThemesProvider>;
+
+function Provider({ children, ...props }: ProviderProps) {
+    const { user, isLoaded } = useUser();
+
+    const createNewUser = async () => {
+        try {
+            if (!isLoaded || !user) return;
+
+            const result = await axios.post("/api/user", {});
+            console.log(result.data);
+        } catch (error) {
+            console.error("Error creating user:", error);
+        }
+    };
+
+    useEffect(() => {
+        createNewUser();
+    }, [user, isLoaded]);
+
+    return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
-export default Provider
+export default Provider;
