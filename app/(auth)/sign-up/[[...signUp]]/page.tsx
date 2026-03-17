@@ -3,7 +3,6 @@
 import * as Clerk from "@clerk/elements/common";
 import * as SignUp from "@clerk/elements/sign-up";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function SignUpPage() {
   return (
@@ -58,12 +57,12 @@ export default function SignUpPage() {
 
           <p className="text-center text-xs text-yellow-400">
             Already have an account?{" "}
-            <Link
-              href="/sign-in"
+            <Clerk.Link
+              navigate="sign-in"
               className="font-bold underline underline-offset-2 hover:text-yellow-200"
             >
               Sign in
-            </Link>
+            </Clerk.Link>
           </p>
         </SignUp.Step>
 
@@ -103,12 +102,12 @@ export default function SignUpPage() {
 
           <p className="text-center text-xs text-yellow-400">
             Already have an account?{" "}
-            <Link
-              href="/sign-in"
+            <Clerk.Link
+              navigate="sign-in"
               className="font-bold underline underline-offset-2 hover:text-yellow-200"
             >
               Sign in
-            </Link>
+            </Clerk.Link>
           </p>
         </SignUp.Step>
 
@@ -146,12 +145,12 @@ export default function SignUpPage() {
 
           <p className="text-center text-xs text-yellow-400">
             Already have an account?{" "}
-            <Link
-              href="/sign-in"
+            <Clerk.Link
+              navigate="sign-in"
               className="font-bold underline underline-offset-2 hover:text-yellow-200"
             >
               Sign in
-            </Link>
+            </Clerk.Link>
           </p>
         </SignUp.Step>
       </SignUp.Root>

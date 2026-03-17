@@ -3,7 +3,6 @@
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function SignInPage() {
   return (
@@ -70,12 +69,12 @@ export default function SignInPage() {
           {/* LINK TO SIGN UP */}
           <p className="text-center text-xs text-black">
             No account?{" "}
-            <Link
-              href="/sign-up"
+            <Clerk.Link
+              navigate="sign-up"
               className="font-bold underline underline-offset-2 hover:text-yellow-600"
             >
               Create an account
-            </Link>
+            </Clerk.Link>
           </p>
         </SignIn.Step>
       </SignIn.Root>
