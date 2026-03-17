@@ -11,3 +11,9 @@ export default function Home() {
     </div>
   );
 }
+
+
+export function xyz() {
+  // aniket
+  console.log("xyz");
+}
