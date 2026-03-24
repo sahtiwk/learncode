@@ -19,8 +19,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider
       signInUrl="/sign-in"
       signUpUrl="/sign-up"
-      afterSignInUrl="/dashboard"
-      afterSignUpUrl="/sign-in"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/sign-in"
     >
       <html lang="en" suppressHydrationWarning className="dark">
         <body className={`${geistSans.variable} ${geistMono.variable} ${GameFont.variable} ${inter.variable} antialiased`}>

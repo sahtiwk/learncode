@@ -34,10 +34,18 @@ export async function POST(req: NextRequest) {
         .values({
           name: user.fullName || user.firstName || "Anonymous",
           email: email,
+          clerkId: user.id, // ✅ THIS WAS MISSING
         })
+        .onConflictDoNothing()
         .returning();
 
-      dbUser = newUser[0];
+      if (newUser.length > 0) {
+        dbUser = newUser[0];
+      } else {
+        // Fallback in case onConflictDoNothing didn't return a record (meaning it already exists)
+        const existingUsers = await db.select().from(usersTable).where(eq(usersTable.email, email));
+        dbUser = existingUsers[0];
+      }
     }
 
     // Return user info
