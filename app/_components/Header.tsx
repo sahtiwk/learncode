@@ -78,7 +78,7 @@ function Header() {
             <h2 className= 'font-bold text-3xl font-game'>LearnCode</h2>
         </div>
         <NavigationMenu>
-            <NavigationMenuList className='gap-8'>
+            <NavigationMenuList>
                 <NavigationMenuItem>
                 <NavigationMenuTrigger>Courses</NavigationMenuTrigger>
                 <NavigationMenuContent>

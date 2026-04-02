@@ -17,7 +17,7 @@ function Hero() {
             }
             >Learning Journey</h2>
             <h2 className='mt-5 font-game text-3xl'>Beginner friendly coding courses and projects!</h2>
-            <Button className='font-game text-3xl pd-6 mt-7' variant={'pixel'}>Get Started</Button>
+            <Button className='font-game text-3xl p-6 mt-7' variant={'pixel'}>Get Started</Button>
         </div>
     </div>
   )
