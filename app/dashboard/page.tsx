@@ -1,3 +1,4 @@
+// Force TS Server re-evaluation
 import React from "react";
 import WelcomeBanner from "./_components/WelcomeBanner";
 import EnrollCourses from "./_components/EnrollCourses";

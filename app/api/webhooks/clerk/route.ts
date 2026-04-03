@@ -6,12 +6,28 @@ import { headers } from "next/headers";
 import { db } from "@/config/db";
 import { usersTable } from "@/config/schema";
 import { eq } from "drizzle-orm";
+import { rateLimit, getClientIdentifier } from "@/lib/rate-limit";
 
 export async function POST(req: Request) {
+  // Rate limit: 30 requests per minute per IP
+  const clientId = getClientIdentifier(req);
+  const limiter = rateLimit(`webhook:${clientId}`, {
+    maxRequests: 30,
+    intervalMs: 60_000,
+  });
+
+  if (!limiter.success) {
+    return new Response("Too many requests", {
+      status: 429,
+      headers: { "Retry-After": String(Math.ceil(limiter.resetIn / 1000)) },
+    });
+  }
+
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
-    throw new Error("Missing CLERK_WEBHOOK_SECRET");
+    console.error("CLERK_WEBHOOK_SECRET is not configured");
+    return new Response("Server configuration error", { status: 500 });
   }
 
   // Get headers

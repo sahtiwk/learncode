@@ -69,6 +69,11 @@ function ChartContainer({
   )
 }
 
+const sanitizeCssValue = (value: string): string => {
+  // Strip characters that could break out of CSS context
+  return value.replace(/[<>"'`;{}()\\]/g, "");
+};
+
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
     ([, config]) => config.theme || config.color
@@ -90,7 +95,7 @@ ${colorConfig
     const color =
       itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
       itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
+    return color ? `  --color-${sanitizeCssValue(key)}: ${sanitizeCssValue(color)};` : null
   })
   .join("\n")}
 }

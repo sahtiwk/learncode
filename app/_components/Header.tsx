@@ -130,7 +130,7 @@ function Header() {
       ) : (
         <>
           <div className="flex items-center gap-4 ">
-            <Link href="/">
+            <Link href="/dashboard">
               <Button className="font-game text-2xl" variant="pixel">
                 Dashboard
               </Button>

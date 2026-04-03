@@ -4,8 +4,26 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { usersTable } from "@/config/schema";
 import { db } from "@/config/db";
+import { rateLimit, getClientIdentifier } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 20 requests per minute per IP
+  const clientId = getClientIdentifier(req);
+  const limiter = rateLimit(`user:${clientId}`, {
+    maxRequests: 20,
+    intervalMs: 60_000,
+  });
+
+  if (!limiter.success) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: { "Retry-After": String(Math.ceil(limiter.resetIn / 1000)) },
+      }
+    );
+  }
+
   try {
     const user = await currentUser();
 

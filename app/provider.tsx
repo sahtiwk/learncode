@@ -26,8 +26,6 @@ function Provider({ children, ...props }: ProviderProps) {
 
         saveUser();
     }, [user]);
-    console.log(user);
-
     return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
