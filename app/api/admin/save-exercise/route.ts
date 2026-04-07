@@ -1,0 +1,47 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { db } from '@/config/db';
+import { exercise } from '@/config/schema';
+
+export async function GET() {
+  try {
+    const data = [
+      {
+        "courseId": 2, "chapterId": 1, "exerciseId": "build-your-base-camp", "exerciseName": "Build Your Base Camp",
+        "content": {
+          "content": "<body style='font-family: Arial, sans-serif; line-height:1.6;background-color:#0f0f0f;padding:20px;'><p style='margin-bottom: 8px;'>Every adventurer needs a base camp - a safe place to plan and rest. In HTML, your base camp is built with headings, paragraphs, and sections.</p><p style='margin-bottom: 8px;'>A main heading (<code>&lt;h1&gt;</code>) acts like a flag planted at the camp's center, marking its purpose.</p><p style='margin-bottom: 8px;'>Paragraphs (<code>&lt;p&gt;</code>) are the camp logs where you record instructions, stories, and NPC dialogues.</p><p style='margin-bottom: 8px;'>Sections (<code>&lt;section&gt;</code>) divide your camp into zones-training grounds, supply tents, and the map room.</p><p style='margin-bottom:8px;'>Using the correct tags keeps your camp organized, accessible, and friendly to both players and browsers.</p><p style='margin-bottom:8px;'>Headings provide hierarchy; paragraphs provide content; semantic tags give meaning to your base layouts.</p><p style='margin-bottom:8px;'>Master the base camp structure and future quests will be easier to implement and navigate.</p><p style='margin-bottom:8px;'>This exercise focuses on placing a strong heading and a descriptive paragraph in the body.</p><p style='margin-bottom: 8px;'>Think of HTML elements as camp equipment-each has a specific role and must be used correctly.</p><p style='margin-bottom:8px;'>When your base camp is solid, you can explore the rest of the web world without worry.</p><p style='margin-bottom: 8px;'>Complete this and your in-game reputation will rise among fellow learners.</p><p style='margin-bottom: 8px;'>Set up your flag and write your first log to start the adventure!</p></body>",
+          "task": "<body style='font-family: Arial, sans-serif; padding: 10px;'><p>Inside the <code>&lt;body&gt;</code>, add a heading <code>&lt;h1&gt;</code> with the text <strong>Welcome to Base Camp</strong> and a paragraph <code>&lt;p&gt;</code> with the text <strong>Prepare yourself for the HTML adventure!</strong>.</p></body>",
+          "hint": "<body style='font-family: Arial, sans-serif; padding: 10px;'><p>Use <code>&lt;h1&gt;Welcome to Base Camp&lt;/h1&gt;</code> and <code>&lt;p&gt;Prepare yourself for the HTML adventure!&lt;/p&gt;</code> inside the body.</p></body>",
+          "starterCode": { "/index.html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Base Camp</title>\n</head>\n<body>\n\n</body>\n</html>" },
+          "regex": "<h1>\\s*Welcome to Base Camp\\S*</h1>[\\s\\S]*<p>\\s*Prepare yourself for the HTML adventure!\\s*</p>", "output": "<h1>Welcome to Base Camp</h1><p>Prepare yourself for the HTML adventure!</p>", "hintXp": 35
+        }
+      },
+      {
+        "courseId": 2, "chapterId": 1, "exerciseId": "explore-the-web-skeleton", "exerciseName": "Explore the Web Skeleton",
+        "content": {
+          "content": "<body style='font-family: Arial, sans-serif; line-height:1.6; background-color:#0f0f0f;padding:20px;'><p style='margin-bottom:8px;'>Welcome, brave explorer! Your journey begins by discovering the <strong>web skeleton</strong>. Every web page is built on the foundation of HTML.</p><p style='margin-bottom: 8px;'>The <code>&lt;!DOCTYPE html&gt;</code> declaration tells the browser what type of document it is and prepares the page for modern rendering.</p><p style='margin-bottom: 8px;'>The outer wrapper <code>&lt;html&gt;</code> contains everything on the page - think of it as the walls of your fortress.</p><p style='margin-bottom: 8px;'>Inside the fortress, the <code>&lt;head&gt;</code> stores your tools: the <code>&lt;title&gt;</code>, meta tags, and other hidden helpers.</p><p style='margin-bottom: 8px;'>The <code>&lt;body&gt;</code> is the open field where your story unfolds - headings, paragraphs, images, and links all appear here.</p><p style='margin-bottom: 8px;'>Headings act like banners guiding visitors; paragraphs are your story logs; lists are treasure maps organizing loot.</p><p style='margin-bottom:8px;'>If the skeleton is wrong, your page may look broken or confusing. Correct structure means a reliable page across browsers and devices.</p><p style='margin-bottom:8px;'>This exercise trains you to recognize the essential tags that every HTML page needs. It is the first step to mastering web crafting.</p><p style='margin-bottom:8px;'>Observe, build, and defend your web skeleton - then move on to more advanced quests with confidence.</p><p style='margin-bottom:8px;'>Ready your quill: identify the DOCTYPE, the <code>&lt;html&gt;</code> wrapper, a proper <code>&lt;head&gt;</code> and the <code>&lt;body&gt;</code> to claim your victory.</p><p style='margin-bottom: 8px;'>Completing this will unlock basic HTML understanding and set you up for the rest of the course.</p><p style='margin-bottom:8px;'>Good luck - the web world awaits!</p></body>",
+          "task": "<body style='font-family: Arial, sans-serif; padding: 10px;'><p>Create a complete HTML skeleton including <code>&lt;!DOCTYPE html&gt;</code>, <code>&lt;html lang=\"en\"&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code>. Inside <code>&lt;head&gt;</code> add a <code>&lt;title&gt;</code> with the text <strong>Web Skeleton Adventure</strong>. Leave the body empty for now.</p></body>",
+          "hint": "<body style='font-family:Arial, sans-serif; padding: 10px;'><p>Start with <code>&lt;!DOCTYPE html&gt;</code>. Then create <code>&lt;html lang=\"en\"&gt;</code>. Inside head add <code>&lt;title&gt;Web Skeleton Adventure&lt;/title&gt;</code>. Finally add an empty <code>&lt;body&gt;</code>.</p></body>",
+          "starterCode": { "/index.html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title></title>\n</head>\n<body>\n\n</body>\n</html>" },
+          "regex": "(?i)<title>\\s*Web Skeleton Adventure\\s*</title>", "output": "<title>Web Skeleton Adventure</title>", "hintXp": 30
+        }
+      },
+      {
+        "courseId": 2, "chapterId": 1, "exerciseId": "name-your-world", "exerciseName": "Name Your World",
+        "content": {
+          "content": "<body style='font-family: Arial, sans-serif; line-height:1.6;background-color:#0f0f0f;padding:20px;'><p style='margin-bottom: 8px;'>Every world needs a name - a clear identity so explorers can find and recognize it. In HTML, the world is named with the <code>&lt;title&gt;</code> tag inside the <code>&lt;head&gt;</code>.</p><p style='margin-bottom: 8px;'>The title appears on the browser tab and in search results, serving as your world's calling card.</p><p style='margin-bottom:8px;'>A concise and descriptive title helps visitors quickly understand what your page offers.</p><p style='margin-bottom:8px;'>Naming your world well increases discoverability and gives your site a professional feel.</p><p style='margin-bottom: 8px;'>This exercise trains you to place the title correctly and choose a clear name for your HTML world.</p><p style='margin-bottom:8px;'>Think of the title as the banner that appears on every explorer's map - make it meaningful and memorable.</p><p style='margin-bottom:8px;'>Even small pages benefit from a thoughtful title - it is an important habit for all web builders.</p><p style='margin-bottom:8px;'>Once you master titles, your pages will start showing up properly in tabs and bookmarks.</p><p style='margin-bottom:8px;'>This task is simple but crucial - do it correctly to move forward in the questline.</p><p style='margin-bottom:8px;'>Add your world name inside the head and prepare for the next chapter of adventures.</p><p style='margin-bottom: 8px;'>Your title completes the identity of the HTML skeleton you built earlier.</p><p style='margin-bottom: 8px;'>Name well - your kingdom's reputation depends on it!</p></body>",
+          "task": "<body style='font-family: Arial, sans-serif; padding: 10px;'><p>Set the HTML page <code>&lt;title&gt;</code> to <strong>My Adventure World</strong> inside the <code>&lt;head&gt;</code>.</p></body>",
+          "hint": "<body style='font-family: Arial, sans-serif; padding:10px;'><p>Open the <code>&lt;head&gt;</code> and add <code>&lt;title&gt;My Adventure World&lt;/title&gt;</code>. The title must be inside head, not body.</p></body>",
+          "starterCode": { "/index.html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title></title>\n</head>\n<body>\n\n</body>\n</html>" },
+          "regex": "(?i)<title>\\s*My Adventure World\\s*</title>", "output": "<title>My Adventure World</title>", "hintXp": 30
+        }
+      }
+    ];
+
+    await db.insert(exercise).values(data);
+
+    return NextResponse.json({ message: 'Curriculum seeded successfully (GET)' });
+  } catch (error) {
+    console.error("Error seeding curriculum", error);
+    return NextResponse.json({ error: 'Failed to seed curriculum' }, { status: 500 });
+  }
+}

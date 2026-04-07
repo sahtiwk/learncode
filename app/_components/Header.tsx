@@ -13,6 +13,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { UserButton, useUser } from '@clerk/nextjs';
+import { usePathname, useParams } from 'next/navigation';
 
 const courses = [
   {
@@ -72,53 +73,64 @@ const courses = [
 ];
 
 function Header() {
-  const { isLoaded, isSignedIn, user } = useUser(); // useUser returns an object [web:2]
+  const { isLoaded, isSignedIn, user } = useUser();
+  const pathname = usePathname();
+  const params = useParams();
+  const exerciseSlug = params?.exerciseSlug as string | undefined;
+
+  const isPlayground = !!exerciseSlug;
+
+  const formattedTitle = exerciseSlug 
+    ? exerciseSlug.replaceAll("-", " ").toUpperCase()
+    : "LearnCode";
 
   return (
-    <div className="p-4 max-w-7xl flex justify-between items-center w-full">
+    <div className="p-4 max-w-7xl mx-auto flex justify-between items-center w-full">
       <div className="flex items-center gap-2">
         <Image src="/logo.png" alt="logo" width={40} height={40} />
-        <h2 className="font-bold text-3xl font-game">LearnCode</h2>
+        <h2 className="font-bold text-3xl font-game">{formattedTitle}</h2>
       </div>
 
-      <NavigationMenu>
-        <NavigationMenuList className="gap-8">
-          <NavigationMenuItem>
-            <NavigationMenuTrigger>Courses</NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <ul className="grid md:grid-cols-2 gap-2 sm:w-[400px] md:w-[500px] lg:w-[600px]">
-                {courses.map((course) => (
-                  <li
-                    key={course.id}
-                    className="p-2 hover:bg-accent rounded-2xl cursor-pointer"
-                  >
-                    <h2 className="font-medium">{course.name}</h2>
-                    <p className="text-sm text-gray-500">{course.desc}</p>
-                  </li>
-                ))}
-              </ul>
-            </NavigationMenuContent>
-          </NavigationMenuItem>
+      {!isPlayground && (
+        <NavigationMenu>
+          <NavigationMenuList className="gap-8">
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>Courses</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid md:grid-cols-2 gap-2 sm:w-[400px] md:w-[500px] lg:w-[600px]">
+                  {courses.map((course) => (
+                    <li
+                      key={course.id}
+                      className="p-2 hover:bg-accent rounded-2xl cursor-pointer"
+                    >
+                      <h2 className="font-medium">{course.name}</h2>
+                      <p className="text-sm text-gray-500">{course.desc}</p>
+                    </li>
+                  ))}
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
 
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link href="/projects">Projects</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link href="/projects">Projects</Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
 
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link href="/pricing">Pricing</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link href="/pricing">Pricing</Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
 
-          <NavigationMenuItem>
-            <NavigationMenuLink asChild>
-              <Link href="/contact-us">Contact Us</Link>
-            </NavigationMenuLink>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
+            <NavigationMenuItem>
+              <NavigationMenuLink asChild>
+                <Link href="/contact-us">Contact Us</Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+      )}
 
       {/* While Clerk is loading, show nothing or a loader */}
       {!isLoaded ? null : !isSignedIn ? (
@@ -130,11 +142,13 @@ function Header() {
       ) : (
         <>
           <div className="flex items-center gap-4 ">
-            <Link href="/dashboard">
-              <Button className="font-game text-2xl" variant="pixel">
-                Dashboard
-              </Button>
-            </Link>
+            {!isPlayground && (
+              <Link href="/dashboard">
+                <Button className="font-game text-2xl" variant="pixel">
+                  Dashboard
+                </Button>
+              </Link>
+            )}
 
             <UserButton />
           </div>
