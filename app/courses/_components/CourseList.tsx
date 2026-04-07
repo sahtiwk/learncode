@@ -21,6 +21,14 @@ export interface Chapter {
   exercises: Exercise[];
 }
 
+export interface CompletedExercise {
+  id: number;
+  courseId: number;
+  chapterId: number;
+  exerciseId: number;
+  userId: string;
+}
+
 export interface Course {
   id: number;
   courseId: number;
@@ -32,6 +40,7 @@ export interface Course {
   chapters?: Chapter[];
   userEnroll?: boolean;
   courseEnrollInfo?: { xpEarned: number, enrollDate: any };
+  completedExercise?: CompletedExercise[];
 }
 
 export default function CourseList() {

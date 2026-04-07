@@ -21,6 +21,27 @@ export default function CourseChapters({ courseDetail, loading }: Props) {
     );
   }
 
+  const isExerciseCompleted = (chapterId: number, exerciseIndex: number) => {
+    return courseDetail?.completedExercise?.some(
+      (ce) => ce.chapterId === chapterId && ce.exerciseId === exerciseIndex + 1
+    );
+  };
+
+  const isExerciseLocked = (chapterIndex: number, exerciseIndex: number) => {
+    if (!courseDetail?.userEnroll) return true;
+    if (chapterIndex === 0 && exerciseIndex === 0) return false;
+
+    if (exerciseIndex > 0) {
+      const chapterId = courseDetail.chapters?.[chapterIndex].chapterId;
+      return !isExerciseCompleted(chapterId!, exerciseIndex - 1);
+    } else {
+      const prevChapterIndex = chapterIndex - 1;
+      const prevChapter = courseDetail.chapters?.[prevChapterIndex];
+      const lastExerciseIndex = (prevChapter?.exercises?.length || 1) - 1;
+      return !isExerciseCompleted(prevChapter?.chapterId!, lastExerciseIndex);
+    }
+  };
+
   return (
     <div className="mt-8 bg-zinc-950 border border-zinc-800 rounded-xl p-4">
       <Accordion type="single" collapsible className="w-full">
@@ -38,28 +59,50 @@ export default function CourseChapters({ courseDetail, loading }: Props) {
             </AccordionTrigger>
             <AccordionContent className="pt-2 pb-6 px-4">
               <div className="space-y-3">
-                {chapter.exercises?.map((exercise, i) => (
-                  <div key={i} className="flex items-center justify-between bg-zinc-900 border border-zinc-800 p-4 rounded-xl ml-16">
-                    <span className="text-gray-300 font-medium font-game">
-                      {exercise.name}
-                    </span>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <div>
-                            {/* @ts-ignore custom variant definition from user space */}
-                            <Button disabled variant="pixel-disable" className="opacity-50 cursor-not-allowed font-game">
-                              {exercise.xp} XP
-                            </Button>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent className="bg-black text-white border-zinc-700">
-                          <p>Please enroll first</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                ))}
+                {chapter.exercises?.map((exercise, i) => {
+                  const completed = isExerciseCompleted(chapter.chapterId, i);
+                  const locked = isExerciseLocked(index, i);
+                  
+                  return (
+                    <div key={i} className={`flex items-center justify-between bg-zinc-900 border border-zinc-800 p-4 rounded-xl ml-16 ${locked ? 'opacity-50' : ''}`}>
+                      <span className="text-gray-300 font-medium font-game">
+                        {exercise.name}
+                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              {completed ? (
+                                <Button disabled variant="secondary" className="bg-zinc-700 text-zinc-400 font-game cursor-default">
+                                  Completed
+                                </Button>
+                              ) : (
+                                <Button 
+                                  disabled={locked} 
+                                  variant={locked ? "pixel-disable" : "pixel"} 
+                                  className={`font-game ${locked ? 'cursor-not-allowed' : 'transition-all active:scale-95'}`}
+                                >
+                                  {exercise.xp} XP
+                                </Button>
+                              )}
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent className="bg-black text-white border-zinc-700">
+                            <p>
+                              {!courseDetail.userEnroll 
+                                ? "Please enroll first" 
+                                : locked 
+                                  ? "Complete previous exercise to unlock" 
+                                  : completed 
+                                    ? "Already completed!" 
+                                    : "Start exercise"}
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  );
+                })}
               </div>
             </AccordionContent>
           </AccordionItem>

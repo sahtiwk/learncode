@@ -37,6 +37,8 @@ export default function CourseStatus({ courseDetail, loading }: Props) {
   }
 
   const xpEarned = courseDetail?.courseEnrollInfo?.xpEarned || 0;
+  const exercisesCompletedCount = courseDetail?.completedExercise?.length || 0;
+  const exercisesProgress = updateProgress(exercisesCompletedCount, totalExercises);
   const xpProgress = updateProgress(xpEarned, totalXP);
 
   return (
@@ -50,9 +52,9 @@ export default function CourseStatus({ courseDetail, loading }: Props) {
           <div className="flex-1 w-full">
             <div className="flex justify-between items-center mb-2">
               <span className="font-game text-white text-lg">Exercises</span>
-              <span className="font-game text-white text-lg">0/{totalExercises}</span>
+              <span className="font-game text-white text-lg">{exercisesCompletedCount}/{totalExercises}</span>
             </div>
-            <Progress value={0} className="h-2 bg-zinc-800" />
+            <Progress value={exercisesProgress} className="h-2 bg-zinc-800" />
           </div>
         </div>
 
@@ -64,7 +66,6 @@ export default function CourseStatus({ courseDetail, loading }: Props) {
               <span className="font-game text-white text-lg">XP Earned</span>
               <span className="font-game text-white text-lg">{xpEarned}/{totalXP}</span>
             </div>
-            {/* The progress value takes the dynamically calculated xpEarned relative % */}
             <Progress value={xpProgress} className="h-2 bg-zinc-800" />
           </div>
         </div>
