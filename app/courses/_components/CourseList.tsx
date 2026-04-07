@@ -6,6 +6,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
 
+export interface Exercise {
+  name: string;
+  slug: string;
+  xp: number;
+  difficultyLevel?: string;
+}
+
+export interface Chapter {
+  chapterId: number;
+  courseId: number;
+  name: string;
+  description: string;
+  exercises: Exercise[];
+}
+
 export interface Course {
   id: number;
   courseId: number;
@@ -14,6 +29,7 @@ export interface Course {
   banner: string;
   level: string | null;
   tag: string | null;
+  chapters?: Chapter[];
 }
 
 export default function CourseList() {
