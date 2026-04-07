@@ -12,6 +12,7 @@
     "@base-ui/react": "^1.2.0",
     "@clerk/elements": "^0.24.13",
     "@clerk/nextjs": "^6.39.0",
+    "@codesandbox/sandpack-react": "^2.20.0",
     "@hookform/resolvers": "^5.2.2",
     "@neondatabase/serverless": "^1.0.2",
     "axios": "^1.13.6",

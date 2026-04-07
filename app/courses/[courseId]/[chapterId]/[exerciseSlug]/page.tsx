@@ -1,11 +1,55 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
-import SplitterLayout from 'react-splitter-layout';
+import dynamic from 'next/dynamic';
 import 'react-splitter-layout/lib/index.css';
 import ContentSection from './_components/ContentSection';
+import CodeEditor from './_components/CodeEditor';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+
+// Dynamically import the splitter with SSR disabled to fix "window is not defined"
+const SplitterLayout = dynamic(() => import('react-splitter-layout'), { 
+  ssr: false,
+  loading: () => (
+    <div className="flex-1 h-full flex items-center justify-center bg-zinc-950">
+       <Loader2 className="w-8 h-8 text-zinc-700 animate-spin" />
+    </div>
+  )
+});
+
+// TypeScript Interfaces for strict lesson data
+export interface ExerciseData {
+  id: number;
+  courseId: number;
+  chapterId: number;
+  exerciseId: string;
+  exerciseName: string;
+}
+
+export interface ExerciseContent {
+  content: string;
+  task: string;
+  hint: string;
+  starterCode: Record<string, string>;
+  regex: string;
+  output: string;
+  hintXp: number;
+}
+
+export interface CourseExercise {
+  chapter: {
+    id: number;
+    courseId: number;
+    chapterId: number;
+    name: string;
+    description: string;
+    exercises: any[]; // Array of exercise metadata from courseChapters
+  };
+  exercise: ExerciseData & { content: ExerciseContent };
+}
 
 export default function PlaygroundPage() {
   const { courseId, chapterId, exerciseSlug } = useParams<{ 
@@ -14,7 +58,8 @@ export default function PlaygroundPage() {
     exerciseSlug: string 
   }>();
   
-  const [exerciseDetail, setExerciseDetail] = useState<any>(null);
+  const router = useRouter();
+  const [courseExerciseData, setCourseExerciseData] = useState<CourseExercise | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchExercise = useCallback(async () => {
@@ -25,9 +70,9 @@ export default function PlaygroundPage() {
         chapterId,
         exerciseId: exerciseSlug
       });
-      setExerciseDetail(response.data);
+      setCourseExerciseData(response.data);
     } catch (error) {
-      console.error("Error fetching exercise", error);
+      console.error("Error fetching exercise data", error);
     } finally {
       setLoading(false);
     }
@@ -37,49 +82,71 @@ export default function PlaygroundPage() {
     if (exerciseSlug) fetchExercise();
   }, [exerciseSlug, fetchExercise]);
 
+  // Navigation Logic
+  const getNavSlugs = () => {
+    if (!courseExerciseData?.chapter?.exercises) return { prev: null, next: null };
+    
+    const exercises = courseExerciseData.chapter.exercises;
+    const currentIndex = exercises.findIndex((e: any) => e.slug === exerciseSlug);
+    
+    return {
+      prev: currentIndex > 0 ? exercises[currentIndex - 1].slug : null,
+      next: currentIndex < exercises.length - 1 ? exercises[currentIndex + 1].slug : null
+    };
+  };
+
+  const { prev, next } = getNavSlugs();
+
   return (
-    <div className="h-[calc(100vh-64px)] w-full overflow-hidden bg-black">
-      <SplitterLayout 
-        primaryMinSize={40} 
-        secondaryInitialSize={60}
-      >
-        {/* Left Pane: Theory & Quests */}
-        <ContentSection exerciseDetail={exerciseDetail} loading={loading} />
+    <div className="h-screen w-full flex flex-col bg-black overflow-hidden">
+      <div className="flex-1 overflow-hidden relative">
+        <SplitterLayout 
+          percentage={true}
+          primaryMinSize={30}
+          secondaryMinSize={30}
+          primaryIndex={0}
+        >
+          {/* Left Pane: Theory & Text-based Quests */}
+          <ContentSection 
+            courseExerciseData={courseExerciseData} 
+            loading={loading} 
+          />
 
-        {/* Right Pane: Marketplace / Editor Integration Placeholder */}
-        <div className="h-full bg-zinc-950 flex flex-col relative">
-           <div className="absolute top-0 left-0 w-full p-4 border-b border-zinc-800 bg-zinc-900/30 flex justify-between items-center h-14">
-              <span className="text-zinc-500 font-game text-xs tracking-widest uppercase">Forge Editor Workspace</span>
-              <div className="flex gap-1.5">
-                 <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
-                 <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
-                 <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
-              </div>
-           </div>
-           
-           <div className="m-auto text-center p-12">
-              <div className="text-6xl mb-6 grayscale opacity-20 group-hover:grayscale-0 transition-all">
-                ⌨️
-              </div>
-              <p className="text-zinc-600 font-game italic uppercase tracking-[0.2em] text-xs leading-loose">
-                Initializing Code Environment...<br/>
-                <span className="text-zinc-800">Advanced IDE Interface Phase 4</span>
-              </p>
-              
-              <div className="mt-8 flex justify-center gap-4">
-                 <div className="h-1 w-12 bg-zinc-900 rounded-full animate-pulse" />
-                 <div className="h-1 w-12 bg-zinc-900 rounded-full animate-pulse delay-75" />
-                 <div className="h-1 w-12 bg-zinc-900 rounded-full animate-pulse delay-150" />
-              </div>
-           </div>
+          {/* Right Pane: Live Integrated Development Environment */}
+          <CodeEditor 
+            courseExerciseData={courseExerciseData} 
+            loading={loading} 
+          />
+        </SplitterLayout>
+      </div>
 
-           {/* Console Placeholder */}
-           <div className="absolute bottom-0 left-0 w-full h-32 border-t border-zinc-900 bg-black/40 p-4">
-              <div className="text-zinc-700 font-mono text-xs uppercase mb-2 select-none">Console Output</div>
-              <div className="text-zinc-800 font-mono text-xs italic">Waiting for compiler initialization...</div>
-           </div>
-        </div>
-      </SplitterLayout>
+      {/* Persistent Quest Navigation Footer */}
+      <footer className="h-20 bg-zinc-950 border-t border-zinc-900 flex items-center justify-between px-10 shadow-[0_-4px_50px_rgba(0,0,0,0.5)] z-50">
+          <Button 
+            variant="ghost" 
+            disabled={!prev}
+            onClick={() => router.push(`/courses/${courseId}/${chapterId}/${prev}`)}
+            className="font-game text-zinc-500 hover:text-white flex items-center gap-2 group transition-all h-12 uppercase tracking-widest text-xs"
+          >
+            <ChevronLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+            Previous Quest
+          </Button>
+
+          <div className="flex flex-col items-center">
+             <div className="text-[10px] font-game text-zinc-800 uppercase tracking-[0.3em] mb-1 select-none">Chapter Progress</div>
+             <div className="text-zinc-500 font-game text-xs tracking-tighter">{courseExerciseData?.chapter?.name || "..."}</div>
+          </div>
+
+          <Button 
+            variant="ghost" 
+            disabled={!next}
+            onClick={() => router.push(`/courses/${courseId}/${chapterId}/${next}`)}
+            className="font-game text-zinc-500 hover:text-white flex items-center gap-2 group transition-all h-12 uppercase tracking-widest text-xs"
+          >
+            Next Quest
+            <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+          </Button>
+      </footer>
     </div>
   );
 }

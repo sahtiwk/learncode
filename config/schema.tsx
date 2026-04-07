@@ -40,7 +40,7 @@ export const completedExercise = pgTable("completed_exercise", {
     id: serial("id").primaryKey(),
     courseId: integer("courseId").notNull(),
     chapterId: integer("chapterId").notNull(),
-    exerciseId: integer("exerciseId").notNull(),
+    exerciseId: varchar("exerciseId").notNull(),
     userId: varchar("userId").notNull(),
 });
 

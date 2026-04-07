@@ -3,6 +3,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { Course } from '../../_components/CourseList';
 
 interface Props {
@@ -72,18 +73,29 @@ export default function CourseChapters({ courseDetail, loading }: Props) {
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <div>
-                              {completed ? (
+                               {completed ? (
                                 <Button disabled variant="secondary" className="bg-zinc-700 text-zinc-400 font-game cursor-default">
                                   Completed
                                 </Button>
                               ) : (
-                                <Button 
-                                  disabled={locked} 
-                                  variant={locked ? "pixel-disable" : "pixel"} 
-                                  className={`font-game ${locked ? 'cursor-not-allowed' : 'transition-all active:scale-95'}`}
-                                >
-                                  {exercise.xp} XP
-                                </Button>
+                                !locked ? (
+                                  <Link href={`/courses/${courseDetail.courseId}/${chapter.chapterId}/${exercise.slug}`}>
+                                    <Button 
+                                      variant="pixel" 
+                                      className="font-game transition-all active:scale-95 px-8"
+                                    >
+                                      {exercise.xp} XP
+                                    </Button>
+                                  </Link>
+                                ) : (
+                                  <Button 
+                                    disabled
+                                    variant="pixel-disable" 
+                                    className="font-game cursor-not-allowed px-8"
+                                  >
+                                    {exercise.xp} XP
+                                  </Button>
+                                )
                               )}
                             </div>
                           </TooltipTrigger>
