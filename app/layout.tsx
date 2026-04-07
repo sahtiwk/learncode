@@ -4,6 +4,7 @@ import "./globals.css";
 import Provider from "./provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import Header from "./_components/Header";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Provider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
             <Header />
             {children}
+            <Toaster />
             <div id="clerk-captcha" />
           </Provider>
         </body>

@@ -27,12 +27,20 @@ export default function CourseStatus({ courseDetail, loading }: Props) {
     }
   }, [courseDetail]);
 
+  const updateProgress = (currentValue: number, totalValue: number) => {
+    if (!totalValue) return 0;
+    return (currentValue / totalValue) * 100;
+  };
+
   if (loading) {
-    return <div className="p-6 bg-zinc-900 rounded-xl animate-pulse h-40"></div>;
+    return <div className="p-6 bg-zinc-900 rounded-xl animate-pulse h-40 mt-6"></div>;
   }
 
+  const xpEarned = courseDetail?.courseEnrollInfo?.xpEarned || 0;
+  const xpProgress = updateProgress(xpEarned, totalXP);
+
   return (
-    <div className="bg-zinc-950 p-6 rounded-xl border border-zinc-800 sticky top-10">
+    <div className="bg-zinc-950 p-6 rounded-xl border border-zinc-800 sticky top-10 mt-6">
       <h2 className="text-2xl font-game text-white mb-8">Course Progress</h2>
       
       <div className="space-y-8">
@@ -54,9 +62,10 @@ export default function CourseStatus({ courseDetail, loading }: Props) {
           <div className="flex-1 w-full">
             <div className="flex justify-between items-center mb-2">
               <span className="font-game text-white text-lg">XP Earned</span>
-              <span className="font-game text-white text-lg">0/{totalXP}</span>
+              <span className="font-game text-white text-lg">{xpEarned}/{totalXP}</span>
             </div>
-            <Progress value={0} className="h-2 bg-zinc-800" />
+            {/* The progress value takes the dynamically calculated xpEarned relative % */}
+            <Progress value={xpProgress} className="h-2 bg-zinc-800" />
           </div>
         </div>
       </div>
