@@ -30,6 +30,8 @@ export interface Course {
   level: string | null;
   tag: string | null;
   chapters?: Chapter[];
+  userEnroll?: boolean;
+  courseEnrollInfo?: { xpEarned: number, enrollDate: any };
 }
 
 export default function CourseList() {

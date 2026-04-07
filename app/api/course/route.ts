@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/config/db';
-import { courses, courseChapters } from '@/config/schema';
-import { eq } from 'drizzle-orm';
+import { courses, courseChapters, enrollCourse } from '@/config/schema';
+import { eq, and } from 'drizzle-orm';
+import { currentUser } from '@clerk/nextjs/server';
 
 export async function GET(req: NextRequest) {
   try {
@@ -19,9 +20,27 @@ export async function GET(req: NextRequest) {
       const course = courseResult[0];
       const chaptersResult = await db.select().from(courseChapters).where(eq(courseChapters.courseId, courseId));
       
+      let userEnroll = false;
+      let courseEnrollInfo = undefined;
+      
+      const user = await currentUser();
+      if (user && user.emailAddresses.length > 0) {
+        const userId = user.emailAddresses[0].emailAddress;
+        const enrollResult = await db.select().from(enrollCourse).where(and(eq(enrollCourse.courseId, courseId), eq(enrollCourse.userId, userId)));
+        if (enrollResult.length > 0) {
+          userEnroll = true;
+          courseEnrollInfo = {
+             xpEarned: enrollResult[0].xpEarned,
+             enrollDate: enrollResult[0].enrollDate
+          };
+        }
+      }
+      
       return NextResponse.json({
         ...course,
-        chapters: chaptersResult
+        chapters: chaptersResult,
+        userEnroll,
+        courseEnrollInfo
       });
     }
 
