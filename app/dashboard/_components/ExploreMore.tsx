@@ -63,7 +63,7 @@ export default function ExploreMore() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {courses.map((course) => (
+        {courses.slice(0, 2).map((course) => (
           <Link 
             key={course.courseId} 
             href={`/courses/${course.courseId}`}
@@ -104,6 +104,16 @@ export default function ExploreMore() {
           </Link>
         ))}
       </div>
+
+      {courses.length > 2 && (
+        <div className="mt-8 flex justify-center w-full">
+          <Link href="/courses" className="w-full">
+            <button className="w-full bg-zinc-900/50 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white font-game py-4 rounded-2xl transition-all uppercase text-xs tracking-[0.2em] shadow-lg active:scale-[0.99] group">
+              Explore More Courses <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
+            </button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

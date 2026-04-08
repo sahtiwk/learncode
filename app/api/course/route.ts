@@ -20,6 +20,11 @@ export async function GET(req: NextRequest) {
       const course = courseResult[0];
       const chaptersResult = await db.select().from(courseChapters).where(eq(courseChapters.courseId, courseId));
       
+      console.log(`[API DEBUG] Course ${courseId}: Found ${chaptersResult.length} chapters.`);
+      chaptersResult.forEach((ch, i) => {
+          console.log(`  - Chapter ${i+1}: "${ch.name}" | Exercises Format: ${typeof ch.exercises}`);
+      });
+      
       let userEnroll = false;
       let courseEnrollInfo = undefined;
       let completedExerciseResult: any[] = [];
