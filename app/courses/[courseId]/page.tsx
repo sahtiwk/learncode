@@ -8,12 +8,15 @@ import CourseModuleList from './_components/CourseModuleList';
 import CourseStatus from './_components/CourseStatus';
 import UpgradeToPro from './_components/UpgradeToPro';
 import { Course } from '../_components/CourseList';
+import Confetti from 'react-confetti';
 
 export default function CourseDetailPage() {
   const params = useParams();
   const courseId = params?.courseId;
   const [courseDetail, setCourseDetail] = useState<Course | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
   // Fetch comprehensive course details including enrollment and chapter data
   const fetchCourseDetail = useCallback(async () => {
@@ -41,12 +44,53 @@ export default function CourseDetailPage() {
     fetchCourseDetail();
   }, [fetchCourseDetail]);
 
+  useEffect(() => {
+    // Client-side execution only
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get('completed') === 'true') {
+      setIsCompleted(true);
+      // Clean up the URL neatly
+      window.history.replaceState(null, '', `/courses/${courseId}`);
+      
+      // Dismiss the overlay after a glorious celebration
+      setTimeout(() => {
+        setIsCompleted(false);
+      }, 8000);
+    }
+  }, [courseId]);
+
   const refreshData = () => {
     fetchCourseDetail();
   };
 
   return (
-    <div className="w-full bg-black/20 min-h-screen">
+    <div className="w-full bg-black/20 min-h-screen relative">
+      
+      {/* GLORIOUS CELEBRATION LAYER */}
+      {isCompleted && windowSize.width > 0 && (
+        <div className="fixed inset-0 z-[100] pointer-events-none flex items-center justify-center bg-black/40 backdrop-blur-sm">
+            <Confetti width={windowSize.width} height={windowSize.height} recycle={false} numberOfPieces={800} gravity={0.12} />
+            
+            <div className="bg-zinc-950 p-12 rounded-[3rem] border-4 border-yellow-500 shadow-[0_0_150px_rgba(234,179,8,0.3)] flex flex-col items-center animate-in zoom-in-50 duration-700 fade-in slide-in-from-bottom-20">
+                <h1 className="text-7xl font-game text-yellow-400 uppercase drop-shadow-[0_0_20px_rgba(234,179,8,0.5)]">
+                   Course Mastered!
+                </h1>
+                
+                <p className="mt-8 text-zinc-300 font-mono text-xl uppercase tracking-[0.2em] text-center max-w-lg leading-relaxed">
+                   You have successfully completed all quests and proven your mastery over this sector.
+                </p>
+                
+                <div className="mt-10 px-8 py-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-yellow-500/80 font-game text-base uppercase tracking-[0.3em] flex items-center gap-4">
+                   <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(234,179,8,0.8)]"></div>
+                   Max XP Authenticated
+                   <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(234,179,8,0.8)]"></div>
+                </div>
+            </div>
+        </div>
+      )}
+
       {/* Container with optimized padding for premium look */}
       <div className="p-6 sm:p-10 md:px-16 lg:px-24 xl:px-32 max-w-[1600px] mx-auto">
         

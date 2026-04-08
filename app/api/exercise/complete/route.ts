@@ -14,6 +14,26 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
     }
 
+    // Check if already completed
+    const existingCompletion = await db.select()
+      .from(completedExercise)
+      .where(
+        and(
+          eq(completedExercise.courseId, parseInt(courseId)),
+          eq(completedExercise.chapterId, parseInt(chapterId)),
+          eq(completedExercise.exerciseId, exerciseId),
+          eq(completedExercise.userId, userEmail)
+        )
+      );
+
+    if (existingCompletion.length > 0) {
+      return NextResponse.json({ 
+        success: true,
+        message: 'Quest already completed. No additional XP awarded.',
+        xpAwarded: false
+      });
+    }
+
     // 1. Log completion in completed_exercise table
     await db.insert(completedExercise).values({
       courseId: parseInt(courseId),
