@@ -67,7 +67,7 @@ export default function EnrollCourses() {
         <div className="flex flex-col gap-6 w-full">
           {enrolledList.map((course: any, index: number) => (
              <div key={index} className="flex flex-col md:flex-row gap-8 items-center md:items-start bg-zinc-950 p-8 rounded-3xl border border-zinc-900 transition-all shadow-xl group hover:border-zinc-800/50">
-                <Link href={`/course/${course.courseId}/detail`} className="shrink-0">
+                <Link href={`/courses/${course.courseId}`} className="shrink-0">
                   <Image 
                     src={course.banner?.trimEnd()} 
                     alt={course.title} 
@@ -79,7 +79,7 @@ export default function EnrollCourses() {
                 
                 <div className="flex-1 w-full">
                   <div className="flex justify-between items-start mb-2">
-                    <Link href={`/course/${course.courseId}/detail`}>
+                    <Link href={`/courses/${course.courseId}`}>
                       <h3 className="font-game text-xl text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
                         {course.title}
                       </h3>

@@ -25,7 +25,7 @@ export interface CompletedExercise {
   id: number;
   courseId: number;
   chapterId: number;
-  exerciseId: number;
+  exerciseId: string;
   userId: string;
 }
 

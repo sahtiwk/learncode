@@ -3,6 +3,7 @@
 import React from "react";
 import WelcomeBanner from "./_components/WelcomeBanner";
 import EnrollCourses from "./_components/EnrollCourses";
+import ExploreNewQuests from "./_components/ExploreNewQuests";
 import ExploreMore from "./_components/ExploreMore";
 import InviteFriend from "./_components/InviteFriend";
 import UserStatus from "./_components/UserStatus";
@@ -16,8 +17,17 @@ export default function Dashboard() {
         {/* Left Column — Primary Learning Content */}
         <div className="md:col-span-2 space-y-8">
           <WelcomeBanner />
+          
+          {/* Section 1: Active user enrollments */}
           <EnrollCourses />
+          
+          {/* Section 2: Dynamic course discovery (2 courses + Browse button) */}
+          <ExploreNewQuests />
+          
+          {/* Section 3: Static feature discovery (Quizz Pack, Projects, etc.) */}
           <ExploreMore />
+          
+          {/* Section 4: Community engagement */}
           <InviteFriend />
         </div>
 
