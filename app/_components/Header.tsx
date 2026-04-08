@@ -86,10 +86,10 @@ function Header() {
 
   return (
     <div className="p-4 max-w-7xl mx-auto flex justify-between items-center w-full">
-      <div className="flex items-center gap-2">
+      <Link href="/" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
         <Image src="/logo.png" alt="logo" width={40} height={40} />
         <h2 className="font-bold text-3xl font-game">{formattedTitle}</h2>
-      </div>
+      </Link>
 
       {!isPlayground && (
         <NavigationMenu>
