@@ -3,22 +3,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
-import dynamic from 'next/dynamic';
-import 'react-splitter-layout/lib/index.css';
+import { Group, Panel, Separator } from 'react-resizable-panels';
 import ContentSection from './_components/ContentSection';
 import CodeEditor from './_components/CodeEditor';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
-
-// Dynamically import the splitter with SSR disabled to fix "window is not defined"
-const SplitterLayout = dynamic(() => import('react-splitter-layout'), { 
-  ssr: false,
-  loading: () => (
-    <div className="flex-1 h-full flex items-center justify-center bg-zinc-950">
-       <Loader2 className="w-8 h-8 text-zinc-700 animate-spin" />
-    </div>
-  )
-});
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // TypeScript Interfaces for strict lesson data
 export interface ExerciseData {
@@ -100,24 +89,25 @@ export default function PlaygroundPage() {
   return (
     <div className="h-screen w-full flex flex-col bg-black overflow-hidden">
       <div className="flex-1 overflow-hidden relative">
-        <SplitterLayout 
-          percentage={true}
-          primaryMinSize={30}
-          secondaryMinSize={30}
-          primaryIndex={0}
-        >
+        <Group orientation="horizontal" className="h-full">
           {/* Left Pane: Theory & Text-based Quests */}
-          <ContentSection 
-            courseExerciseData={courseExerciseData} 
-            loading={loading} 
-          />
+          <Panel defaultSize={50} minSize={30}>
+            <ContentSection 
+              courseExerciseData={courseExerciseData} 
+              loading={loading} 
+            />
+          </Panel>
+
+          <Separator className="w-1.5 bg-zinc-900 hover:bg-indigo-500 transition-colors duration-200" />
 
           {/* Right Pane: Live Integrated Development Environment */}
-          <CodeEditor 
-            courseExerciseData={courseExerciseData} 
-            loading={loading} 
-          />
-        </SplitterLayout>
+          <Panel defaultSize={50} minSize={30}>
+            <CodeEditor 
+              courseExerciseData={courseExerciseData} 
+              loading={loading} 
+            />
+          </Panel>
+        </Group>
       </div>
 
       {/* Persistent Quest Navigation Footer */}
